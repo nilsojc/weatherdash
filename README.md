@@ -211,6 +211,7 @@ And voila! Bucket will be created along with the data of the cities in JSON form
 
 <h2>How to Build/Clone</h2>
 
+```
 git clone https://github.com/nilsojc/weatherdash.git
 
 3. Install dependencies:
@@ -225,7 +226,7 @@ bashCopyaws configure
 
 5. Run the application:
 python src/weather_dashboard.py
-
+```
  ---
 
 <h2>Conclusion</h2>
