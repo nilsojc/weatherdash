@@ -14,23 +14,23 @@ class WeatherDashboard:
         self.bucket_name = os.getenv('AWS_BUCKET_NAME')
         self.s3_client = boto3.client('s3')
 
-   def create_bucket(self):
-    """Create S3 bucket if it doesn't exist"""
-    try:
-        # Simple version for us-east-1
-        self.s3_client.create_bucket(
-            Bucket=self.bucket_name
-        )
-        print(f"Created bucket: {self.bucket_name}")
-    except self.s3_client.exceptions.BucketAlreadyExists:
-        print(f"Bucket already exists: {self.bucket_name}")
-    except Exception as e:
-        print(f"Error creating bucket: {e}")
-        raise
+    def create_bucket_if_not_exists(self):
+        """Create S3 bucket if it doesn't exist"""
+        try:
+            self.s3_client.head_bucket(Bucket=self.bucket_name)
+            print(f"Bucket {self.bucket_name} exists")
+        except:
+            print(f"Creating bucket {self.bucket_name}")
+        try:
+            # Simpler creation for us-east-1
+            self.s3_client.create_bucket(Bucket=self.bucket_name)
+            print(f"Successfully created bucket {self.bucket_name}")
+        except Exception as e:
+            print(f"Error creating bucket: {e}")
 
     def fetch_weather(self, city):
         """Fetch weather data from OpenWeather API"""
-        base_url = "http://api.openweathermap.org/data/2.5/weather/"
+        base_url = "http://api.openweathermap.org/data/2.5/weather"
         params = {
             "q": city,
             "appid": self.api_key,
@@ -73,7 +73,7 @@ def main():
     # Create bucket if needed
     dashboard.create_bucket_if_not_exists()
     
-    cities = ["Orlando", "Nashville", "Chicago"]
+    cities = ["Orlando", "Nashville", "San Jose"]
     
     for city in cities:
         print(f"\nFetching weather for {city}...")
